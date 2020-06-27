@@ -1,0 +1,100 @@
+﻿@using MvcBookStore.Models
+@model List<Giohang>
+@{
+    ViewBag.Title = "ĐƠN ĐẶT HÀNG";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<h2 style="text-align: center">THÔNG TIN HÀNH HÓA</h2>
+<table align="center" border="1">
+    <tr style="text-align: center; font-weight: bold">
+        <td>Mã sách</td>
+        <td>Tên sách</td>
+        <td>Ảnh bìa</td>
+        <td>Số lượng</td>
+        <td>Đơn giá</td>
+        <td>Thành tiền</td>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr style="text-align: center; font-weight: bold">
+            <td>@item.iMasach</td>
+            <td>@item.sTensach</td>
+            <td>
+                <img src="~/Content/book_images/@item.sAnhbia" />
+            </td>
+            @using (Html.BeginForm("CapnhatGiohang", "Giohang", new { @iMaSp = item.iMasach }))
+            {
+                <td>@item.iSoluong</td>
+                <td>@String.Format("{0:0,0}", item.dDongia)</td>
+                <td>@String.Format("{0:0,0}", item.dThanhtien)</td>
+            }
+        </tr>
+    }
+    <tr style="font-weight: bold; text-align: right; color: red">
+        <td colspan="3">Số lượng sách: @ViewBag.Tongsoluong</td>
+        <td colspan="3">Tổng tiền: @String.Format("{0:0,0}", ViewBag.Tongtien) VNĐ</td>
+    </tr>
+    <tr style="font-weight: bold; color: blue; text-align: right">
+        <td colspan="6">
+            @Html.ActionLink("Trở về giỏ hàng", "Giohang", "Giohang")
+        </td>
+    </tr>
+</table>
+
+<h2 style="text-align: center">THÔNG TIN ĐẶT HÀNG</h2>
+@{
+    KHACHHANG khachhang = (KHACHHANG)Session["Taikhoan"];
+}
+<table align="center">
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        <tr style="height: 40px">
+            <td>Họ tên khách hàng:</td>
+            <td style="font-weight: bold">@khachhang.HoTen</td>
+        </tr>
+        <tr style="height: 40px">
+            <td>Địa chỉ:</td>
+            <td style="font-weight: bold">@khachhang.DiachiKH</td>
+        </tr>
+        <tr style="height: 40px">
+            <td>Điện thoại:</td>
+            <td style="font-weight: bold">@khachhang.DienthoaiKH</td>
+        </tr>
+        <tr style="height: 40px">
+            <td>Ngày đặt:</td>
+            <td style="font-weight: bold">@DateTime.Now.ToShortDateString()</td>
+        </tr>
+        <tr style="height: 40px">
+            <td>Ngày giao hàng:</td>
+            <td style="font-weight: bold">
+                <input type="date" name="Ngaygiao" />
+                @ViewData["Error_delivery_date"]
+            </td>
+        </tr>
+        <tr style="height: 40px">
+            <td>
+                <input type="submit" value="ĐỒNG Ý ĐẶT HÀNG" data-toggle="modal" data-target="#myModal" />
+            </td>
+        </tr>
+    }
+</table>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thông báo</h4>
+            </div>
+            <div class="modal-body">
+                <p>Ngày giao hàng phải lớn hơn ngày đặt hàng.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
